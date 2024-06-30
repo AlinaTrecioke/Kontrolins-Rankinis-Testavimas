@@ -1,0 +1,3319 @@
+{
+	"info": {
+		"_postman_id": "91272ae1-204b-43e5-8bf8-eba432574217",
+		"name": "AlinaTrečiokėKontrolinisCollection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36297510"
+	},
+	"item": [
+		{
+			"name": "verify User",
+			"item": [
+				{
+					"name": "create user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"let randomString = Math.random().toString(36).substring(2, 10);\r",
+									"\r",
+									"let email =  randomString + '@example.com';\r",
+									"let password = randomString + 'A1*';\r",
+									"pm.environment.set(\"password\", password);\r",
+									"pm.environment.set(\"email\", email);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+									"});\r",
+									"\r",
+									"let jsonData = pm.response.json();\r",
+									"pm.environment.set(\"username\", jsonData.username);\r",
+									"pm.environment.set(\"id\", jsonData.id);\r",
+									"\r",
+									"pm.test(\"Response body has user ID\", function () {\r",
+									"let jsonData = pm.response.json();\r",
+									"pm.expect(jsonData).to.have.property(\"id\");\r",
+									"});\r",
+									"\r",
+									"const Ajv = require('ajv');\r",
+									"const ajv = new Ajv;\r",
+									"let schema = {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"id\": {\"type\": \"number\" },\r",
+									"        \"username\": { \"type\": \"string\" },\r",
+									"        \"password\": { \"type\": \"string\" },\r",
+									"        \"email\": { \"type\": \"string\" },\r",
+									"        \"registered_on\": { \"type\": \"string\", \"format\": \"date-time\"},\r",
+									"        \"role\": {\"type\": \"string\"}\r",
+									"    },\r",
+									"    \"required\": [\"id\", \"username\", \"password\", \"email\", \"registered_on\", \"role\"]\r",
+									"};\r",
+									"\r",
+									"const validate = ajv.compile(schema);\r",
+									"const valid = validate(jsonData);\r",
+									"\r",
+									"pm.test(\"Schema is valid\", function () {\r",
+									"if(!valid){\r",
+									"    console.log(validate.errors);\r",
+									"}\r",
+									"pm.expect(valid).to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{$randomUserName}}\",\r\n    \"password\": \"{{password}}\",\r\n    \"repeatPassword\": \"{{password}}\",\r\n    \"email\": \"{{email}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URI}}/api/v1/library/users/register",
+							"host": [
+								"{{BASE_URI}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"library",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "201 Created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{$randomUserName}}\",\r\n    \"password\": \"{{password}}\",\r\n    \"repeatPassword\": \"{{password}}\",\r\n    \"email\": \"{{email}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/register",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Fri, 28 Jun 2024 11:09:58 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "197"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89ad3a42ba6ba88b-RIX"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"c6-vMYoxVUkT2NT80ELraQamzLZMOg\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "31ab27a4-1350-43a8"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "235"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719573659"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 104,\n    \"username\": \"Sarina.Morar\",\n    \"password\": \"$2b$10$Mcobn9cnvMUSCLoT1HliWuujcoea4XFMffpu6Y7wOuvigPlnSI5rC\",\n    \"email\": \"bw7o372i@example.com\",\n    \"registered_on\": \"2024-06-28T00:00:00.000Z\",\n    \"role\": \"user\"\n}"
+						},
+						{
+							"name": "400 Bad Request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{$randomUserName}}\",\r\n    \"password\": \"{{password}}\",\r\n    \"repeatPassword\": \"123\",\r\n    \"email\": \"{{email}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/register",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										"register"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 30 Jun 2024 18:18:20 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "147"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89c02882fed0575e-IAD"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"9c-bjRAardBgVoa5oqoGCTmc1FOH8U\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "05abadae-8d99-4641"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "246"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719772097"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"errors\": [\n        {\n            \"type\": \"field\",\n            \"value\": \"Roy63\",\n            \"msg\": \"Username must be at least 6 characters with a max of 32 characters\",\n            \"path\": \"username\",\n            \"location\": \"body\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"let jsonData = pm.response.json();\r",
+									"let token = jsonData.token;\r",
+									"pm.environment.set(\"token\", token);\r",
+									"\r",
+									"\r",
+									"pm.test(\"Success message Check\", function () {\r",
+									"let jsonData = pm.response.json();\r",
+									"let successMessage = jsonData.message;\r",
+									"pm.expect(successMessage).to.be.eql(\"Logged in successfully.\")\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Token presence check\", function (){\r",
+									"let jsonData = pm.response.json();\r",
+									"pm.expect(jsonData).to.have.property(\"token\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"login\": \"{{username}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URI}}/api/v1/library/users/login",
+							"host": [
+								"{{BASE_URI}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"library",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200 Ok",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"login\": \"{{username}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/login",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Fri, 28 Jun 2024 12:15:07 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "213"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89ad99b6cfa3a899-RIX"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"cf-FQl2reXzbU2r7YgdcnnaxWrsgHM\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "e340d9bc-2b89-47d3"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "224"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719577383"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Logged in successfully.\",\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjA3LCJyb2xlIjoidXNlciIsImlhdCI6MTcxOTU3NjkwNywiZXhwIjoxNzE5NTgwNTA3fQ.Cp6GpOTxqHwh8gFh_ePK9seh15lSf-Z7UbzgazErot0\"\n}"
+						},
+						{
+							"name": "400 Bad Request missing password",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"login\": \"{{username}}\",\r\n    \"password\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/login",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										"login"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 30 Jun 2024 18:24:34 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "115"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89c031a8ed5339b0-IAD"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"6d-vPALcHSWIJFb3UZYIGrZUYS1LUw\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "3a5e6717-4f39-4a5b"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "240"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719772097"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"errors\": [\n        {\n            \"type\": \"field\",\n            \"value\": \"\",\n            \"msg\": \"Password cannot be empty\",\n            \"path\": \"password\",\n            \"location\": \"body\"\n        }\n    ]\n}"
+						},
+						{
+							"name": "400 Bad Request missing email",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"login\": \"\",\r\n    \"password\": \"{{password}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/login",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										"login"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 30 Jun 2024 18:25:18 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "112"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89c032b6c8228012-IAD"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"67-UBLWZ826e/ZI2lnBAEU6pSq6srA\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "94923a58-1b1d-443c"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "239"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719772097"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"errors\": [\n        {\n            \"type\": \"field\",\n            \"value\": \"\",\n            \"msg\": \"Login cannot be empty\",\n            \"path\": \"login\",\n            \"location\": \"body\"\n        }\n    ]\n}"
+						},
+						{
+							"name": "401 Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"login\": \"AAA\",\r\n    \"password\": \"{{password}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/login",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										"login"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 30 Jun 2024 18:26:05 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "36"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89c033dceb413992-IAD"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "68d6698d-dc17-45ab"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "238"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719772097"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "Unauthorized"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "authRoutes",
+			"item": [
+				{
+					"name": "get user by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"ID Check\", function () {\r",
+									"let jsonData = pm.response.json();\r",
+									"let expectedId = pm.environment.get(\"id\");\r",
+									"pm.expect(jsonData.id).to.eql(expectedId);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+							"host": [
+								"{{BASE_URI}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"library",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200 Ok",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{id}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Fri, 28 Jun 2024 12:29:56 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "199"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89adaf6b9e4ca899-RIX"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"c9-zjtKuE9TsNrxU3/YJc9G4O/QcTk\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "2083ba58-ebb1-425d"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "209"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719578319"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 217,\n    \"username\": \"Mose.Reichert52\",\n    \"password\": \"$2b$10$B9CCR3D.C6rPCk.mU6c4SeNAdJ0cxNCQEtXtTJV0Tp4Cv4lrsvtyC\",\n    \"email\": \"chdxcoen@example.com\",\n    \"registered_on\": \"2024-06-28T00:00:00.000Z\",\n    \"role\": \"user\"\n}"
+						},
+						{
+							"name": "404 Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "21"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Fri, 28 Jun 2024 12:37:37 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "53"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89adbaae2d78a899-RIX"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1d-FQSQB39WxFTtKvyiKML+XciKif0\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "f997d035-95f7-4218"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "177"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719578319"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User not found.\"\n}"
+						},
+						{
+							"name": "400 Bad Request missing ID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 30 Jun 2024 18:28:52 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "114"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89c037f31b845722-IAD"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"69-THYj4T6ADdVNkWAsYTkNc2T02y4\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "3a176b95-5865-4259"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "248"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719773006"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"errors\": [\n        {\n            \"type\": \"field\",\n            \"value\": \":id\",\n            \"msg\": \"ID must be an integer\",\n            \"path\": \"id\",\n            \"location\": \"params\"\n        }\n    ]\n}"
+						},
+						{
+							"name": "400 Bad Request ID must be integer",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "aaa"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 30 Jun 2024 18:30:04 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "115"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89c039b37a63883e-IAD"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"69-0lOTdwwJX5ze5uYkqMlIAq6V0GE\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "125d0dfa-a02b-4012"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "247"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719773006"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"errors\": [\n        {\n            \"type\": \"field\",\n            \"value\": \"aaa\",\n            \"msg\": \"ID must be an integer\",\n            \"path\": \"id\",\n            \"location\": \"params\"\n        }\n    ]\n}"
+						},
+						{
+							"name": "401 Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{id}}"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 30 Jun 2024 18:30:46 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "36"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89c03abae9fb13b3-IAD"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "7acb0553-2963-4127"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "246"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719773006"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "Unauthorized"
+						}
+					]
+				},
+				{
+					"name": "user by Id update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"let jsonData = pm.response.json();\r",
+									"let newUserName = jsonData.username;\r",
+									"pm.environment.set(\"username\", newUserName);\r",
+									"\r",
+									"\r",
+									"pm.test(\"Username Updated\", function() {\r",
+									"let jsonData = pm.response.json();\r",
+									"let expectedUserName = pm.environment.get(\"username\");\r",
+									"pm.expect(jsonData.username).to.eql(expectedUserName);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check for all expected fields\", function () {\r",
+									"    const expectedFields = [\"id\", \"username\", \"password\", \"email\", \"registered_on\", \"role\"];\r",
+									"    expectedFields.forEach(field => {\r",
+									"        pm.expect(jsonData).to.have.property(field);\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let randomString = Math.random().toString(36).substring(2, 10);\r",
+									"\r",
+									"let newEmail =  randomString + '@example.com';\r",
+									"let newPassword = randomString + 'A2*';\r",
+									"pm.environment.set(\"password\", newPassword);\r",
+									"pm.environment.set(\"email\",newEmail);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{$randomUserName}}\",\r\n    \"password\": \"{{password}}\",\r\n    \"email\": \"{{email}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+							"host": [
+								"{{BASE_URI}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"library",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200 OK",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{$randomUserName}}\",\r\n    \"password\": \"{{password}}\",\r\n    \"email\": \"{{email}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{id}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 30 Jun 2024 18:47:16 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "200"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89c052e40b1a598c-IAD"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"c4-yuVQYxpMROwfddDLwMH8U7++4QA\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "a8039e1e-d279-4964"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "246"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719773911"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 457,\n    \"username\": \"Sage_Stehr\",\n    \"password\": \"$2b$10$iMEXjkMf2HZTDK4Jrv.yDu2DuqsUoh1eP0e4dqZtvRbFHAWYA/P8y\",\n    \"email\": \"d7qzh1zu@example.com\",\n    \"registered_on\": \"2024-06-30T00:00:00.000Z\",\n    \"role\": \"user\"\n}"
+						},
+						{
+							"name": "401 Unauthorized",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{$randomUserName}}\",\r\n    \"password\": \"{{password}}\",\r\n    \"email\": \"{{email}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{id}}"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 30 Jun 2024 18:48:03 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "36"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89c0540c39b89c64-IAD"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "759bf403-8f6f-497c"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "245"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719773911"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "Unauthorized"
+						},
+						{
+							"name": "400 Bad Request missing ID",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{$randomUserName}}\",\r\n    \"password\": \"{{password}}\",\r\n    \"email\": \"{{email}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 30 Jun 2024 18:48:39 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "114"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89c054ec1b7d059f-IAD"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"69-THYj4T6ADdVNkWAsYTkNc2T02y4\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "78f3ff6b-4dbd-4238"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "244"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719773911"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"errors\": [\n        {\n            \"type\": \"field\",\n            \"value\": \":id\",\n            \"msg\": \"ID must be an integer\",\n            \"path\": \"id\",\n            \"location\": \"params\"\n        }\n    ]\n}"
+						},
+						{
+							"name": "404 Not Found",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{$randomUserName}}\",\r\n    \"password\": \"{{password}}\",\r\n    \"email\": \"{{email}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "666"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 30 Jun 2024 18:49:09 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "53"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89c055a92ba20851-IAD"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1d-FQSQB39WxFTtKvyiKML+XciKif0\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "f3c5f521-d108-491e"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "242"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719773911"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User not found.\"\n}"
+						},
+						{
+							"name": "400 Bad Request ID must be an integer",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{$randomUserName}}\",\r\n    \"password\": \"{{password}}\",\r\n    \"email\": \"{{email}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "aaa"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 30 Jun 2024 18:49:37 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "115"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89c056563efc0606-IAD"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"69-0lOTdwwJX5ze5uYkqMlIAq6V0GE\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "d464d380-e443-4a52"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "241"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719773911"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"errors\": [\n        {\n            \"type\": \"field\",\n            \"value\": \"aaa\",\n            \"msg\": \"ID must be an integer\",\n            \"path\": \"id\",\n            \"location\": \"params\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "User by Id update specific values",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"let jsonData = pm.response.json();\r",
+									"let updatedUserName = jsonData.username;\r",
+									"pm.environment.set(\"username\", updatedUserName);\r",
+									"\r",
+									"\r",
+									"pm.test(\"Updated Field Check\", function() {\r",
+									"let jsonData = pm.response.json();\r",
+									"let updatedUserName = jsonData.username;\r",
+									"let expectedUserName = pm.environment.get(\"username\");\r",
+									"pm.expect(updatedUserName).to.eql(expectedUserName);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check for expected fields are present\", function () {\r",
+									"    const expectedFields = [\"id\", \"username\", \"password\", \"email\", \"registered_on\", \"role\"];\r",
+									"    expectedFields.forEach(field => {\r",
+									"        pm.expect(jsonData).to.have.property(field);\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{$randomUserName}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+							"host": [
+								"{{BASE_URI}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"library",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200 Ok",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"The Newest Name\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{id}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Fri, 28 Jun 2024 13:12:35 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "195"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89adede3aa73a873-RIX"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"c5-p97aJmPTqBVhb1RTS8Ei5bNjBts\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "cf8b3c24-7b9a-48f5"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "246"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719581044"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 227,\n    \"username\": \"The Newest Name\",\n    \"password\": \"$2b$10$p0vCigII9vjcd7vOW1uY2eBy7jNPpYwBDbi10nxeTB.DRZek1t6l6\",\n    \"email\": \"newemail@new.com\",\n    \"registered_on\": \"2024-06-28T00:00:00.000Z\",\n    \"role\": \"user\"\n}"
+						},
+						{
+							"name": "401 Unauthorized",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{$randomUserName}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{id}}"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 30 Jun 2024 18:56:54 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "36"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89c0610129a605b5-IAD"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "738b336f-4546-4e79"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "219"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719773911"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "Unauthorized"
+						},
+						{
+							"name": "400 Bad Request missing ID",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{$randomUserName}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 30 Jun 2024 18:57:26 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "114"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89c061ccaa9b20c3-IAD"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"69-THYj4T6ADdVNkWAsYTkNc2T02y4\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "22b855c8-e636-40e9"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "218"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719773911"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"errors\": [\n        {\n            \"type\": \"field\",\n            \"value\": \":id\",\n            \"msg\": \"ID must be an integer\",\n            \"path\": \"id\",\n            \"location\": \"params\"\n        }\n    ]\n}"
+						},
+						{
+							"name": "404 Not Found",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{$randomUserName}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "555"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 30 Jun 2024 18:58:09 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "53"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89c062d69df78275-IAD"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1d-FQSQB39WxFTtKvyiKML+XciKif0\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "940fc190-757f-4616"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "210"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719773911"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User not found.\"\n}"
+						},
+						{
+							"name": "400 Bad Request is must be an integer",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{$randomUserName}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "aaa"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 30 Jun 2024 18:58:30 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "115"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89c0635cfc375968-IAD"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"69-0lOTdwwJX5ze5uYkqMlIAq6V0GE\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "9b3b2f00-3855-4010"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "249"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719774811"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"errors\": [\n        {\n            \"type\": \"field\",\n            \"value\": \"aaa\",\n            \"msg\": \"ID must be an integer\",\n            \"path\": \"id\",\n            \"location\": \"params\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "user delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Delete Message Check\", function () {\r",
+									"let jsonData = pm.response.json();\r",
+									"let deleteMessage = jsonData.message;\r",
+									"pm.expect(deleteMessage).to.be.eql(\"User deleted successfully.\")\r",
+									"});\r",
+									"\r",
+									"let id = pm.environment.get(\"secondUsersId\");\r",
+									"let followUpURL = 'https://exampleusingdb-4.onrender.com/api/v1/library/users/${id}';\r",
+									"\r",
+									"pm.sendRequest(followUpURL, function (err, response){\r",
+									"pm.test(\"Follow-Up Request To Confirm Deletion\", function (){\r",
+									"    pm.expect(response).to.have.status(400)\r",
+									"});\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+							"host": [
+								"{{BASE_URI}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"library",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200 OK",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{id}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 30 Jun 2024 19:00:51 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "64"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89c066c9fc7572ec-IAD"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"28-iS+XjorDKSLBZobM1Oen1Mvryto\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "0a46e481-c58a-4811"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "247"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719774811"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User deleted successfully.\"\n}"
+						},
+						{
+							"name": "401 Unauthorized",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{id}}"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 30 Jun 2024 19:03:34 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "36"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89c06ac5e9eb3b36-IAD"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "3adac496-db0f-459b"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "241"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719774811"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "Unauthorized"
+						},
+						{
+							"name": "400 Bad Request missing ID",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 30 Jun 2024 19:04:11 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "114"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89c06bac5c9305f3-IAD"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"69-THYj4T6ADdVNkWAsYTkNc2T02y4\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "d51ccd01-01bb-43d4"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "240"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719774811"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"errors\": [\n        {\n            \"type\": \"field\",\n            \"value\": \":id\",\n            \"msg\": \"ID must be an integer\",\n            \"path\": \"id\",\n            \"location\": \"params\"\n        }\n    ]\n}"
+						},
+						{
+							"name": "404 Not Found",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "50"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 30 Jun 2024 19:05:29 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "53"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89c06d968c2f9c54-IAD"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1d-FQSQB39WxFTtKvyiKML+XciKif0\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "fad70a54-ed0e-4179"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "237"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719774811"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User not found.\"\n}"
+						},
+						{
+							"name": "400 Bad Request ID must be an integer",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URI}}/api/v1/library/users/:id",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"library",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "aaa"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 30 Jun 2024 19:06:06 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "115"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CF-Ray",
+									"value": "89c06e7c39a83812-IAD"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:5173"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"69-0lOTdwwJX5ze5uYkqMlIAq6V0GE\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin, Accept-Encoding"
+								},
+								{
+									"key": "rndr-id",
+									"value": "9910aa88-3c7c-47c3"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "250"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "236"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1719774811"
+								},
+								{
+									"key": "x-render-origin-server",
+									"value": "Render"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"errors\": [\n        {\n            \"type\": \"field\",\n            \"value\": \"aaa\",\n            \"msg\": \"ID must be an integer\",\n            \"path\": \"id\",\n            \"location\": \"params\"\n        }\n    ]\n}"
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}
